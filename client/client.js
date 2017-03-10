@@ -254,5 +254,5 @@ function Socket(model){
 		this.count =0;
 		ViewRefresh();
 	}
-	this.done = ()=>{this.connection.send("DONE")}
+	this.done = ()=>{clearInterval(this.extrap.interval); this.connection.send("DONE")}
 };

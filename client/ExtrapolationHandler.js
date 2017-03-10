@@ -9,7 +9,7 @@ function ExtrapolationHandler()
 	
 	this.set = ()=> {console.log("set"); this.timeOuts.concat([window.setTimeout(this.extrapolate, 150)]);}
 	this.clear = (x) => {clearTimeout(this.timeOuts[x]);}
-	window.setInterval(this.set,650);
+	this.interval = window.setInterval(this.set,650);
 };
 
 function genCheckRollback(EH) //method test this baby
