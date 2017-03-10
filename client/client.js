@@ -212,11 +212,12 @@ function Socket(model){
 		this.connection.send(inc);
 	}
 // Log messages from the server
-	this.connection.onmessage = (e)=> {
-		if(seq == this.extrap.expectedSeq)
-		{
-			this.extrap.clear();
-		}
+	this.connection.onmessage = (e)=> 
+	{
+		//if(seq == this.extrap.expectedSeq)
+		//{
+			this.extrap.clear(seq);
+		//}
 		
 		//this is in scope?
 		var array = e.data.split(":");

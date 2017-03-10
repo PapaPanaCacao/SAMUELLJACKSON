@@ -5,10 +5,10 @@ function ExtrapolationHandler()
 	this.messages = [];//parsed messages
 	this.extrapolate = () => { this.countTick = this.countTick + 1; ControllerTick();}	
 	this.checkRollback = genCheckRollback(this);
+	this.timeOuts = [];
 	
-	this.interval;
-	this.set = ()=> {this.interval = setTimeout(this.extrapolate, 750);}
-	this.clear = () => {clearTimeout(this.interval);}
+	this.set = ()=> {this.timeOuts.concat([setTimeout(this.extrapolate, 750)]);}
+	this.clear = (x) => {clearTimeout(this.timeOuts[x]);}
 };
 
 function genCheckRollback(EH) //method test this baby
