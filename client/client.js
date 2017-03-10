@@ -10,7 +10,7 @@ function Socket(model){
 	this.model = model;
 	this.connection = new WebSocket('ws://'+clientAddress+':'+clientPort);//, ['soap', 'xmpp']);
 	this.extrap = new ExtrapolationHandler();
-	
+	//this.extrap.set();
 
 	this.convertBinToInt = function(input)
 	{
@@ -213,7 +213,11 @@ function Socket(model){
 	}
 // Log messages from the server
 	this.connection.onmessage = (e)=> {
-		this.extrap.clear();
+		if(seq == this.extrap.expectedSeq)
+		{
+			this.extrap.clear();
+		}
+		
 		//this is in scope?
 		var array = e.data.split(":");
 		//console.log(array)
@@ -238,8 +242,9 @@ function Socket(model){
 			var seq = parseInt(array[array.length-1]);
 			console.log("seq bruh: "+seq);
 			this.deserialize(array);
+			this.extrap.set();
 			//ViewRefresh();
-			window.setTimeout(ControllerTick, 750);
+			//window.setTimeout(ControllerTick, 750);
 			//ViewRefresh();
 		}
 		

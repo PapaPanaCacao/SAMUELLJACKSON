@@ -18,15 +18,12 @@ function ControllerStopGame()
 
 function ControllerTie()
 {
-
-	console.log("TIE");
 	getModel().lastWinner = 0;
 	ControllerStopGame();
 }
 
 function ControllerWin(id)
 {
-	console.log("WIN " + id);
 	getModel().lastWinner = id+1;
 	ControllerStopGame();
 }

@@ -6,8 +6,9 @@ function ExtrapolationHandler()
 	this.extrapolate = () => { this.countTick = this.countTick + 1; ControllerTick();}	
 	this.checkRollback = genCheckRollback(this);
 	
-	this.interval = setInterval(this.extrapolate, 850);
-	this.clear = () => {clearInterval(this.interval);}
+	this.interval;
+	this.set = ()=> {this.interval = setTimeout(this.extrapolate, 750);}
+	this.clear = () => {clearTimeout(this.interval);}
 };
 
 function genCheckRollback(EH) //method test this baby
