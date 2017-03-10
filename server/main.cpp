@@ -34,6 +34,7 @@ priority_queue <QueueQuintuple, vector<QueueQuintuple>, QueueQuintuple> messageQ
 map<int,int> clientIDSequenceCount = map<int,int>();
 int count = 0;
 time_t  timev;
+int seq = 0;
 //time(&timev);
 
 /* called when a client connects */
@@ -163,6 +164,7 @@ void messageHandler(int clientID, string message)
 		qp.clientID = clientID;
 		qp.timestamp = tempTime;
 		qp.delay = (static_cast<int>(floor(rand() *  3))+1) % 3;
+		qp.seqNum = seq;
 		//cout << __FUNCTION__ << " delay: " << qp.delay << endl;
 		if(qp.delay < 0)
 		{
@@ -180,6 +182,7 @@ void inPeriodic()
 	QueueQuintuple qp;
 	vector<QueueQuintuple> rejectList = vector<QueueQuintuple>();
 	decrementDelays();
+	++seq;
 	while(messageQueue.size()!=0 && (qp = messageQueue.top()).delay <= 0)
 	{
 		messageQueue.pop();
@@ -193,7 +196,7 @@ void inPeriodic()
 			string bonusPos1 = handleBinaryConversion(cm.serialize(c)[1]);
 			string bonusPos2 = handleBinaryConversion(cm.serialize(c)[2]);
 			time(&timev);
-			os << st << ":" << bonusPos1 << ":" << bonusPos2 << ":" << timev-qp.timestamp;
+			os << st << ":" << bonusPos1 << ":" << bonusPos2 << ":" << timev-qp.timestamp << ":" << qp.seqNum ;
 			//cout << " time stamp: " << timev-qp.timestamp << endl;
 			//cout << os.str() << endl;
 			cm.sendAll(os.str().c_str());

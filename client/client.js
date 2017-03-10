@@ -9,6 +9,7 @@ function Socket(model){
 	first = Math.floor( Date.now() / 1000 );
 	this.model = model;
 	this.connection = new WebSocket('ws://'+clientAddress+':'+clientPort);//, ['soap', 'xmpp']);
+	this.extrap = new ExtrapolationHandler();
 	
 
 	this.convertBinToInt = function(input)
@@ -30,7 +31,7 @@ function Socket(model){
 	{
     
 		s= [0,0,0,0]
-		for(var h =0 ; h < bin.length; ++h)
+		for(var h =0 ; h < bin.length-1; ++h)
 		{
 			s[h] = this.convertBinToInt(bin[h]);
 		}
@@ -212,6 +213,7 @@ function Socket(model){
 	}
 // Log messages from the server
 	this.connection.onmessage = (e)=> {
+		this.extrap.clear();
 		//this is in scope?
 		var array = e.data.split(":");
 		//console.log(array)
@@ -233,6 +235,8 @@ function Socket(model){
 		}
 		else 
 		{
+			var seq = parseInt(array[array.length-1]);
+			console.log("seq bruh: "+seq);
 			this.deserialize(array);
 			//ViewRefresh();
 			window.setTimeout(ControllerTick, 750);
