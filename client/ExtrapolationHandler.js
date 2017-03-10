@@ -10,7 +10,7 @@ function ExtrapolationHandler()
 	
 	this.set = ()=> {console.log("set"); this.timeOuts.concat([window.setTimeout(this.extrapolate, 150)]);}
 	this.clear = (x) => {clearTimeout(this.timeOuts[x]);}
-	this.interval = window.setInterval(this.set,650);
+	this.interval = window.setInterval(this.set,850);
 };
 
 function genExtrapolate(EH)
@@ -20,6 +20,24 @@ function genExtrapolate(EH)
 		this.countTick = this.countTick + 1;
 		getModel().growSnake(0);
 		getModel().growSnake(1);
+		
+		if(snakeDead(0) && snakeDead(1))
+		{
+			ControllerTie();
+			clearInterval(EH.interval);
+		}
+		else if(snakeDead(0))
+		{
+			ControllerWin(2);
+			clearInterval(EH.interval);
+		}
+		else if(snakeDead(1))
+		{
+			ControllerWin(1);
+			clearInterval(EH.interval);
+		}
+		else{;}
+		
 		ControllerTick();
 		ViewRefresh();
 	}

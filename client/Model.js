@@ -108,31 +108,57 @@ function genGetChangeDirection(model) //changes direction of snake associated wi
 //generates makeBonus ///////////perhaps we can have a wrapper that checks if bonuses is
 							   //under thresh and then call so that every tick you can call
 							   //this no issue
+function objectInTheWay(x,y)
+{
+	var snakes = model.getSnakes();
+	for(var i = 0; i < snakes.length; i++)
+	{
+		var body = snakes[i].getBody();
+		for(var j = 0; j < body.length; j++)
+		{
+			if(body[j].equals(new Vector(x,y)))
+				return true;
+		}
+	}
+	
+	var bonuses = model.getBonuses();
+	for(var i = 0; i < bonuses.length; i++)
+	{
+		if(bonuses[i].equals(new Vector(x,y)))
+			return true;
+	}
+	return false;
+}
+
+function objectInTheWayNoHead(x,y)
+{
+	var snakes = getModel().getSnakes();
+	for(var i = 0; i < snakes.length; i++)
+	{
+		var body = snakes[i].getBody();
+		for(var j = 1; j < body.length; j++)
+		{
+			if(body[j].equals(new Vector(x,y)))
+				return true;
+		}
+	}
+	return false;
+}
+
+function snakeDead(index)
+{
+	console.log(getModel().boardWidth,getModel().boardHeight)
+	var head = getModel().getSnake(index).getHead();
+	var check = head.getX() >= getModel().boardWidth || head.getX() <= -1;
+	check = check || head.getY() >= getModel().boardHeight || head.getY() <=-1;
+	return check || objectInTheWayNoHead(head.getX(),head.getY());
+}
+							   
 function genMakeBonus(model)
 {
 	//helper function
 	//checks an x y to see if there already is object there
-	function objectInTheWay(x,y)
-	{
-		var snakes = model.getSnakes();
-		for(var i = 0; i < snakes.length; i++)
-		{
-			var body = snakes[i].getBody();
-			for(var j = 0; j < body.length; j++)
-			{
-				if(body[j].equals(new Vector(x,y)))
-					return true;
-			}
-		}
-		
-		var bonuses = model.getBonuses();
-		for(var i = 0; i < bonuses.length; i++)
-		{
-			if(bonuses[i].equals(new Vector(x,y)))
-				return true;
-		}
-		return false;
-	}
+	
 	//generated function
 	// keeps generating random x and y in bounds
 	//until there is no object in the way and returns that x y

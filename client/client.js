@@ -174,14 +174,21 @@ function Socket(model){
 			getModel().bonuses[bonusToChange] = newBonusPos;
 		}
     
-		if(s1Loss && s2Loss)
+		if((s1Loss && s2Loss) || (snakeDead(0) && snakeDead(1)))
 		{
 			ControllerTie();
+			clearInterval(this.extrap.interval);
 		}
-		else if(s1Loss)
+		else if(s1Loss || snakeDead(0))
+		{
 			ControllerWin(2);
-		else if(s2Loss)
+			clearInterval(this.extrap.interval);
+		}
+		else if(s2Loss || snakeDead(1))
+		{
 			ControllerWin(1);
+			clearInterval(this.extrap.interval);
+		}
 		}
 	
 		this.serialize = function(model)
@@ -223,8 +230,8 @@ function Socket(model){
 		//this is in scope?
 		var array = e.data.split(":");
 		//console.log(array)
-		console.log((Math.floor( Date.now() / 1000 ))-first);
-		console.log(parseInt(array[3]));
+		//console.log((Math.floor( Date.now() / 1000 ))-first);
+		//console.log(parseInt(array[3]));
 		//console.log(array[3]);
 		calculatedLatency = (Math.floor( Date.now() / 1000 )-first);//-parseInt(array[3]);
 		document.getElementById("latency").innerHTML = calculatedLatency;
@@ -244,12 +251,8 @@ function Socket(model){
 		{
 			var seq = parseInt(array[array.length-1]);
 			this.extrap.clear(seq);
-			console.log("seq bruh: "+seq);
 			this.deserialize(array,seq);
-			//this.extrap.set();
 			ViewRefresh();
-			//window.setTimeout(ControllerTick, 750);
-			//ViewRefresh();
 		}
 		
 		this.count =0;

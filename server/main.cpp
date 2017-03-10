@@ -186,7 +186,7 @@ void inPeriodic()
 	while(messageQueue.size()!=0 && (qp = messageQueue.top()).delay <= 0)
 	{
 		messageQueue.pop();
-		cout << qp.seqNum << endl << " tstamp: "<<qp.timestamp << " SIZE: "<<messageQueue.size()<<endl;
+		//cout << qp.seqNum << endl << " tstamp: "<<qp.timestamp << " SIZE: "<<messageQueue.size()<<endl;
 		map<int,int>::iterator it = timeStampMap.find(qp.timestamp);
 		if(cm.stateReady(qp.clientID, qp.seqNum) && it == timeStampMap.end())
 		{
