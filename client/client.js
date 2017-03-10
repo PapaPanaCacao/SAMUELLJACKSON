@@ -27,7 +27,7 @@ function Socket(model){
 		return a;
 	}
 	
-	this.deserialize = function(bin)
+	this.deserialize = function(bin, seq)
 	{
     
 		s= [0,0,0,0]
@@ -140,12 +140,13 @@ function Socket(model){
 		}
 		else
 		{
-			console.log(getModel().snakeIndex)
 			getModel().changeDirection(1, s2Dir);
 		}
 		
-		getModel().growSnake(0);
-		getModel().growSnake(1);
+		var index = getModel().snakeIndex == 0 ? 1 : 0;
+		this.extrap.checkRollback(getModel().getSnake(index).getDirection(), seq);
+		//getModel().growSnake(0);
+		//getModel().growSnake(1);//>= then check rollback
 		if(s1Bonus)
 		{
 			getModel().getSnake(0).eatBonus();
@@ -244,9 +245,9 @@ function Socket(model){
 			var seq = parseInt(array[array.length-1]);
 			this.extrap.clear(seq);
 			console.log("seq bruh: "+seq);
-			this.deserialize(array);
+			this.deserialize(array,seq);
 			//this.extrap.set();
-			//ViewRefresh();
+			ViewRefresh();
 			//window.setTimeout(ControllerTick, 750);
 			//ViewRefresh();
 		}

@@ -30,7 +30,6 @@ function ControllerWin(id)
 
 function ControllerTick()
 {
-	console.log("send it")
 	socket.sendMessage(socket.serialize(getModel()));
 	ViewRefresh();
 	return;	

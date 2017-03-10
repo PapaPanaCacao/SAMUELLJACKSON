@@ -3,14 +3,45 @@ function ExtrapolationHandler()
 	this.expectedSeq = 0;
 	this.countTick = 0;//problem is tick may not get incremented if interval is cleared
 	this.messages = [];//parsed messages
-	this.extrapolate = () => { this.countTick = this.countTick + 1; ControllerTick(); ViewRefresh();}	
+	this.extrapolate = genExtrapolate(this);
 	this.checkRollback = genCheckRollback(this);
+	this.inDeserialize = genInDesirialize(this);
 	this.timeOuts = [];
 	
 	this.set = ()=> {console.log("set"); this.timeOuts.concat([window.setTimeout(this.extrapolate, 150)]);}
 	this.clear = (x) => {clearTimeout(this.timeOuts[x]);}
 	this.interval = window.setInterval(this.set,650);
 };
+
+function genExtrapolate(EH)
+{
+	function nest()
+	{
+		this.countTick = this.countTick + 1;
+		getModel().growSnake(0);
+		getModel().growSnake(1);
+		ControllerTick();
+		ViewRefresh();
+	}
+	return nest;
+}
+
+function genInDesirialize(EH)
+{
+	function nest(newDir, seq)
+	{
+		if(seq >= this.timeOuts.length)
+		{
+			getModel().growSnake(0);
+			getModel().growSnake(1);
+		}
+		else
+		{
+			EH.checkRollback(newDir);
+		}
+	}
+	return nest;
+}
 
 function genCheckRollback(EH) //method test this baby
 {
