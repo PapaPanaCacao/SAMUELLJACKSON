@@ -7,8 +7,9 @@ function ExtrapolationHandler()
 	this.checkRollback = genCheckRollback(this);
 	this.timeOuts = [];
 	
-	this.set = ()=> {this.timeOuts.concat([setTimeout(this.extrapolate, 750)]);}
+	this.set = ()=> {console.log("set"); this.timeOuts.concat([window.setTimeout(this.extrapolate, 1)]);}
 	this.clear = (x) => {clearTimeout(this.timeOuts[x]);}
+	window.setInterval(this.set,750);
 };
 
 function genCheckRollback(EH) //method test this baby

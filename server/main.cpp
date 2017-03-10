@@ -25,7 +25,7 @@ struct QueueQuintuple
 };
 
 //struct for serialization
-
+map<int,int> timeStampMap = map<int,int>();
 webSocket server;
 ConnectionManager cm = ConnectionManager(&server, 12, 9);//server is not initialized..well see.
 //ConnectionManager cm = ConnectionManager(&server, 9, 12);
@@ -186,9 +186,11 @@ void inPeriodic()
 	while(messageQueue.size()!=0 && (qp = messageQueue.top()).delay <= 0)
 	{
 		messageQueue.pop();
-		
-		if(cm.stateReady(qp.clientID, qp.seqNum))
+		cout << qp.seqNum << endl << " tstamp: "<<qp.timestamp << " SIZE: "<<messageQueue.size()<<endl;
+		map<int,int>::iterator it = timeStampMap.find(qp.timestamp);
+		if(cm.stateReady(qp.clientID, qp.seqNum) && it == timeStampMap.end())
 		{
+			timeStampMap[qp.timestamp] = 1;
 			//cout << __FUNCTION__ << endl;
 			Compressed* c = static_cast<Compressed*>(malloc(sizeof(struct Compressed)));
 			cm.moveModel(c);
@@ -217,7 +219,8 @@ void inPeriodic()
 }
 
 /* called orrnce per select() loop */
-void periodicHandler(){
+void periodicHandler()
+{
 	if(cm.connReady())
 	{
 		static time_t next = time(NULL) + 2;
@@ -230,7 +233,8 @@ void periodicHandler(){
 	}
 }
 
-int main(int argc, char *argv[]){
+int main(int argc, char *argv[])
+{
     int port  = 21234;
 
     //cout << "Please set server port: ";

@@ -9,7 +9,7 @@ function Socket(model){
 	first = Math.floor( Date.now() / 1000 );
 	this.model = model;
 	this.connection = new WebSocket('ws://'+clientAddress+':'+clientPort);//, ['soap', 'xmpp']);
-	this.extrap = new ExtrapolationHandler();
+	this.extrap; 
 	//this.extrap.set();
 
 	this.convertBinToInt = function(input)
@@ -216,7 +216,7 @@ function Socket(model){
 	{
 		//if(seq == this.extrap.expectedSeq)
 		//{
-			this.extrap.clear(seq);
+			
 		//}
 		
 		//this is in scope?
@@ -236,14 +236,16 @@ function Socket(model){
 		{
 			parseInt(array[1]);//ID
 			getModel().snakeIndex = parseInt(array[2]);
-			window.setTimeout(ControllerTick, 750);
+			//window.setTimeout(ControllerTick, 750);
+			this.extrap = new ExtrapolationHandler();
 		}
 		else 
 		{
 			var seq = parseInt(array[array.length-1]);
+			this.extrap.clear(seq);
 			console.log("seq bruh: "+seq);
 			this.deserialize(array);
-			this.extrap.set();
+			//this.extrap.set();
 			//ViewRefresh();
 			//window.setTimeout(ControllerTick, 750);
 			//ViewRefresh();
