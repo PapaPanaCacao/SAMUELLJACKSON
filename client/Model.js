@@ -87,8 +87,8 @@ function genGrowSnake(model) // adds new body part
 		var s = model.getSnake(ID);
 		var nP = s.getHead().add(s.getDirection());
 		s.addBody(nP);
-		console.log("ID: "+ID + " x: "+nP.x)
-		console.log("ID: "+ID + " y: "+nP.y)
+		//console.log("ID: "+ID + " x: "+nP.x)
+		//console.log("ID: "+ID + " y: "+nP.y)
 	}
 	return func;
 }
@@ -147,7 +147,6 @@ function objectInTheWayNoHead(x,y)
 
 function snakeDead(index)
 {
-	console.log(getModel().boardWidth,getModel().boardHeight)
 	var head = getModel().getSnake(index).getHead();
 	var check = head.getX() >= getModel().boardWidth || head.getX() <= -1;
 	check = check || head.getY() >= getModel().boardHeight || head.getY() <=-1;

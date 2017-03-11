@@ -9,8 +9,7 @@ function Socket(model){
 	first = Math.floor( Date.now() / 1000 );
 	this.model = model;
 	this.connection = new WebSocket('ws://'+clientAddress+':'+clientPort);//, ['soap', 'xmpp']);
-	this.extrap; 
-	//this.extrap.set();
+	this.extrap;
 
 	this.convertBinToInt = function(input)
 	{
@@ -144,9 +143,8 @@ function Socket(model){
 		}
 		
 		var index = getModel().snakeIndex == 0 ? 1 : 0;
-		this.extrap.checkRollback(getModel().getSnake(index).getDirection(), seq);
-		//getModel().growSnake(0);
-		//getModel().growSnake(1);//>= then check rollback
+		//this.extrap.checkRollback(getModel().getSnake(index).getDirection(), seq);
+		this.extrap.inDeserialize(getModel().getSnake(index).getDirection(), seq);
 		if(s1Bonus)
 		{
 			getModel().getSnake(0).eatBonus();
@@ -189,7 +187,7 @@ function Socket(model){
 			ControllerWin(1);
 			clearInterval(this.extrap.interval);
 		}
-		}
+	}
 	
 		this.serialize = function(model)
 		{
@@ -222,17 +220,9 @@ function Socket(model){
 // Log messages from the server
 	this.connection.onmessage = (e)=> 
 	{
-		//if(seq == this.extrap.expectedSeq)
-		//{
-			
-		//}
 		
 		//this is in scope?
 		var array = e.data.split(":");
-		//console.log(array)
-		//console.log((Math.floor( Date.now() / 1000 ))-first);
-		//console.log(parseInt(array[3]));
-		//console.log(array[3]);
 		calculatedLatency = (Math.floor( Date.now() / 1000 )-first);//-parseInt(array[3]);
 		document.getElementById("latency").innerHTML = calculatedLatency;
 
@@ -249,6 +239,7 @@ function Socket(model){
 		}
 		else 
 		{
+			this.extrap.bufferMessage(array);
 			var seq = parseInt(array[array.length-1]);
 			this.extrap.clear(seq);
 			this.deserialize(array,seq);
