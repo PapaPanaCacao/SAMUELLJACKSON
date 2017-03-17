@@ -87,8 +87,8 @@ function genGrowSnake(model) // adds new body part
 		var s = model.getSnake(ID);
 		var nP = s.getHead().add(s.getDirection());
 		s.addBody(nP);
-		//console.log("ID: "+ID + " x: "+nP.x)
-		//console.log("ID: "+ID + " y: "+nP.y)
+		console.log("ID: "+ID + " x: "+nP.x)
+		console.log("ID: "+ID + " y: "+nP.y)
 	}
 	return func;
 }

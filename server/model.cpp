@@ -138,6 +138,7 @@ bool objectInTheWay(Model m, int x, int y)
 		}
 	}
 	
+	    cout << __FUNCTION__ <<  " : snake 33 bonus" << endl;
 	vector<Tuple> bVect = m.getBonuses();
 	for(int i = 0; i < bVect.size(); ++i)
 	{
@@ -151,9 +152,9 @@ bool objectInTheWay(Model m, int x, int y)
 	
 Tuple Model::makeBonus(int bpos)
 {
-	int x = static_cast<int>(floor(rand() *  this->boardWidth)) % this->boardWidth;
-	int y = static_cast<int>(floor(rand() * this->boardHeight)) % this->boardHeight;
-	
+	int x = rand() % this->boardWidth ;
+	int y = rand() % this->boardHeight ;
+	cout << __FUNCTION__ <<  " : snake 31 bonus x:" << x << " y:" << y << endl;
 	if(x < 0)
 	{
 		x = x*-1;
@@ -164,8 +165,9 @@ Tuple Model::makeBonus(int bpos)
 	}
 	while(objectInTheWay(*this,x,y))
 	{
-		x = static_cast<int>(floor(rand() *  this->boardWidth)) % this->boardWidth;
-		y = static_cast<int>(floor(rand() * this->boardHeight)) % this->boardHeight;
+    x = rand() % this->boardWidth ;
+    y = rand() % this->boardHeight ;
+	  cout << __FUNCTION__ <<  " : snake 31 bonus x:" << x << " y:" << y << endl;
 		if(x < 0)
 		{
 			x = x*-1;
@@ -177,6 +179,7 @@ Tuple Model::makeBonus(int bpos)
 	}
 	//cout << "x: "<< x << "   y: " << y << endl;
 	this->bonuses.at(bpos) = Tuple(x,y);
+	return Tuple(x,y);
 }
 
 int Model::getBoardWidth()
@@ -211,11 +214,9 @@ void Model::move()
 
 void Model::newGame()
 {
-		//cout << __FUNCTION__ << "x: " << this->getSnake(1)->getDirection().getX() << " y: "<<this->getSnake(1)->getDirection().getY() << endl;
 		this->getSnake(0)->resetSnake(2,2,Tuple(1,0));
 		this->getSnake(1)->resetSnake(9,7, Tuple(-1,0));
 		
 		this->bonuses.at(0) = Tuple(7,2);
 		this->bonuses.at(1) = Tuple(4,7);
-		//cout << __FUNCTION__ << "x: " << this->getSnake(1)->getDirection().getX() << " y: "<<this->getSnake(1)->getDirection().getY() << endl;
 }
