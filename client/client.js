@@ -86,7 +86,7 @@ function Socket(model){
 			s1Bonus = true;
       s1BonusX = s[2] - '0';
       s1BonusY = s[3] - '0'; 
-      console.log("client.deserialize.BONUS 1 [" + s1BonusX + "]" );
+      console.log("client.deserialize.BONUS 1 [" + s1BonusX + "," + s1BonusY +"]" );
 		}
     
     a = s[4];
@@ -133,11 +133,11 @@ function Socket(model){
 			s2Bonus = true;
       s2BonusX = s[2] - '0';
       s2BonusY = s[3] - '0'; 
-      console.log("client.deserialize.BONUS 2 [" + s2BonusX + "]" );
+      console.log("client.deserialize.BONUS 2 [" + s2BonusX + "," + s2BonusY + "]" );
 		}
     
 		// SET TO MODEL
-		if(getModel().snakeIndex == 1)
+		/*if(getModel().snakeIndex == 1)
 		{
       console.log("client.deserialize.changeDirection 1 [" + s1Dir.getX() + "]");
 			getModel().changeDirection(0, s1Dir);
@@ -146,12 +146,13 @@ function Socket(model){
 		{
       console.log("client.deserialize.changeDirection 2 [" + s2Dir.getX() + "]");
 			getModel().changeDirection(1, s2Dir);
-		}
+		}*/
 		
     console.log("client.deserialize.growSnake");
 		var index = getModel().snakeIndex == 0 ? 1 : 0;
 		//this.extrap.checkRollback(getModel().getSnake(index).getDirection(), seq);
-		this.extrap.inDeserialize(getModel().getSnake(index).getDirection(), seq);
+		var newDir = getModel().snakeIndex == 0 ? s2Dir : s1Dir;
+		this.extrap.inDeserialize(newDir, seq);
 
 		if(s1Bonus)
 		{
@@ -184,18 +185,21 @@ function Socket(model){
 		}
     
     console.log("client.deserialize.fin test");
-		if((s1Loss && s2Loss) || (snakeDead(0) && snakeDead(1)))
+		if((s1Loss && s2Loss) /*|| (snakeDead(0) && snakeDead(1))*/)
 		{
+      console.log("TIE");
 			ControllerTie();
 			clearInterval(this.extrap.interval);
 		}
-		else if(s1Loss || snakeDead(0))
+		else if(s1Loss /*|| snakeDead(0)*/)
 		{
+      console.log("WIN 2");
 			ControllerWin(2);
 			clearInterval(this.extrap.interval);
 		}
-		else if(s2Loss || snakeDead(1))
+		else if(s2Loss /*|| snakeDead(1)*/)
 		{
+      console.log("WIN 1");
 			ControllerWin(1);
 			clearInterval(this.extrap.interval);
 		}

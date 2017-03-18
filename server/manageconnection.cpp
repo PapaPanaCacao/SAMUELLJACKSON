@@ -88,7 +88,7 @@ void ConnectionManager::send(int clientID, string message)
   if (clientID == 1)
   {
   cout << __FUNCTION__ << ": " << " Sending to client [" << clientID << "]" << endl;
-    cout << ">>>>>>>>>>>>>>>message : [" << message << "] client.js:241:3" << endl;
+    cout << ">>>>>>>>>>>>>>>message : [" << message << "]" << endl;
   }
 	this->server->wsSend(clientID, message);
 }

@@ -17,6 +17,7 @@ struct QueueQuintuple
 	int clientID;
 	int timestamp;
 	int seqNum;
+	int cTick;
 	bool operator() (QueueQuintuple& qp1,QueueQuintuple& qp2)
     {
         //return qp1.delay > qp2.delay;
@@ -184,35 +185,46 @@ void inPeriodic()
 	while(messageQueue.size()!=0 && (qp = messageQueue.top()).delay <= 0)
 	{
     cout << __FUNCTION__ << ": Treatement of message on the top of messageQueue" << endl;
-    cout << "<<<<<<<<<<<<<<<message : [" << qp.message << "] client.js:233:3" << endl;
+    cout << "<<<<<<<<<<<<<<<message : [" << qp.message << "]" << endl;
     cout << " clientID : [" << qp.clientID << "]" \
          << " timestamp : [" << qp.timestamp << "]" << " delay : [" << qp.delay << "]" << endl;
 
 		messageQueue.pop();
 		
-    cm.updateModel(qp.clientID, cm.deserialize((unsigned char*)qp.message.c_str()));
-		//cout << qp.seqNum << endl << " tstamp: "<<qp.timestamp << " SIZE: "<<messageQueue.size()<<endl;
-		map<int,int>::iterator it = timeStampMap.find(qp.timestamp);
-		if(cm.stateReady(qp.clientID, qp.seqNum) && it == timeStampMap.end())//THIS IS MAKES IT SO ONLY ONE OF PAIRED SEQ NUM MESSAGES WILL GET SENT
+		vector<string> mVect = parseMessage(qp.message);
+		if(strcmp(mVect.at(0).c_str(), "DONE") == 0)
 		{
-			timeStampMap[qp.timestamp] = 1;
-			//cout << __FUNCTION__ << endl;
-			Compressed* c = static_cast<Compressed*>(malloc(sizeof(struct Compressed)));
-			cm.moveModel(c);
-			time(&timev);
-			os << cm.serialize(c) << ":" << (timev-qp.timestamp) << ":" << qp.seqNum ;
-			//cout << " time stamp: " << timev-qp.timestamp << endl;
-      cout << __FUNCTION__ << ": " << "Server sends game evolution to clients [" << os.str() << "]" << endl;
-
-			cm.sendAll(os.str().c_str());
-
-			os.str("");
-			free(c);
+      cout << __FUNCTION__ << ": is an DONE message from client ID : " << qp.clientID << endl;
+			//TODO
+			//return;
 		}
-		else
-		{
-			rejectList.push_back(qp);
-		}
+    else
+    {
+      qp.cTick = atoi(mVect.at(1).c_str());
+      cm.updateModel(qp.clientID, cm.deserialize((unsigned char*)mVect.at(0).c_str()));
+		  //cout << qp.seqNum << endl << " tstamp: "<<qp.timestamp << " SIZE: "<<messageQueue.size()<<endl;
+		  map<int,int>::iterator it = timeStampMap.find(qp.timestamp);
+		  if(cm.stateReady(qp.clientID, qp.seqNum) && it == timeStampMap.end())//THIS IS MAKES IT SO ONLY ONE OF PAIRED SEQ NUM MESSAGES WILL GET SENT
+		  {
+			  timeStampMap[qp.timestamp] = 1;
+			  Compressed* c = static_cast<Compressed*>(malloc(sizeof(struct Compressed)));
+			  cm.moveModel(c);
+			  time(&timev);
+			  os << cm.serialize(c) << ":" << (timev-qp.timestamp) << ":" << qp.seqNum << ":" << qp.cTick ;
+			  //cout << " time stamp: " << timev-qp.timestamp << endl;
+        cout << __FUNCTION__ << ": " << "Server sends game evolution to clients [" << os.str() << "]" << endl;
+
+			  cm.sendAll(os.str().c_str());
+
+			  os.str("");
+			  free(c);
+
+		  }
+		  else
+		  {
+			  rejectList.push_back(qp);
+		  }
+    }
 	}
 
 	for(vector<QueueQuintuple>::iterator it = rejectList.begin(); it != rejectList.end(); ++it)
@@ -223,7 +235,12 @@ void inPeriodic()
   }//cm.isGameOn()
   else
   {
-    Sleep(1000);
+    cout << "game is finished" << endl;
+	  while(messageQueue.size() != 0)
+	  {
+		  messageQueue.pop();
+    }
+    Sleep(100);
   }
 		
 }

@@ -138,7 +138,6 @@ bool objectInTheWay(Model m, int x, int y)
 		}
 	}
 	
-	    cout << __FUNCTION__ <<  " : snake 33 bonus" << endl;
 	vector<Tuple> bVect = m.getBonuses();
 	for(int i = 0; i < bVect.size(); ++i)
 	{
@@ -154,7 +153,6 @@ Tuple Model::makeBonus(int bpos)
 {
 	int x = rand() % this->boardWidth ;
 	int y = rand() % this->boardHeight ;
-	cout << __FUNCTION__ <<  " : snake 31 bonus x:" << x << " y:" << y << endl;
 	if(x < 0)
 	{
 		x = x*-1;
@@ -167,7 +165,6 @@ Tuple Model::makeBonus(int bpos)
 	{
     x = rand() % this->boardWidth ;
     y = rand() % this->boardHeight ;
-	  cout << __FUNCTION__ <<  " : snake 31 bonus x:" << x << " y:" << y << endl;
 		if(x < 0)
 		{
 			x = x*-1;
@@ -216,7 +213,13 @@ void Model::newGame()
 {
 		this->getSnake(0)->resetSnake(2,2,Tuple(1,0));
 		this->getSnake(1)->resetSnake(9,7, Tuple(-1,0));
+    cout << __FUNCTION__ << " : Snake 0 body starts at x: " << this->getSnake(0)->getBody().at(0).getX() << " y: "<<this->getSnake(0)->getBody().at(0).getY() << endl;
+		cout << __FUNCTION__ << " : Snake 1 body starts at x: " << this->getSnake(1)->getBody().at(0).getX() << " y: "<<this->getSnake(1)->getBody().at(0).getY() << endl;
+		cout << __FUNCTION__ << " : Snake 0 direction is x: " << this->getSnake(0)->getDirection().getX() << " y: "<<this->getSnake(0)->getDirection().getY() << endl;
+		cout << __FUNCTION__ << " : Snake 0 direction is x: " << this->getSnake(1)->getDirection().getX() << " y: "<<this->getSnake(1)->getDirection().getY() << endl;
 		
 		this->bonuses.at(0) = Tuple(7,2);
 		this->bonuses.at(1) = Tuple(4,7);
+    cout << __FUNCTION__ << " : Bonus 0 is at x: " << this->bonuses.at(0).getX() << " y: " << this->bonuses.at(0).getY() << endl;
+    cout << __FUNCTION__ << " : Bonus 1 is at x: " << this->bonuses.at(1).getX() << " y: " << this->bonuses.at(1).getY() << endl;
 }

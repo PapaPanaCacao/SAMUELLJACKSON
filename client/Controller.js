@@ -36,7 +36,7 @@ function ControllerWin(id)
 function ControllerTick()
 {
 	console.log("ControllerTick.Tick");
-	socket.sendMessage(socket.serialize(getModel()));
+	socket.sendMessage(socket.serialize(getModel())+":"+socket.extrap.countTick);
 	ViewRefresh();
 	return;	
 }
